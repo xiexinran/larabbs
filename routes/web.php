@@ -1,18 +1,9 @@
 <?php
 
 Route::get('/', 'PagesController@root')->name('root');
+Auth::routes();
 
-// Authentication Routes...
-Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-Route::post('login', 'Auth\LoginController@login');
-Route::post('logout', 'Auth\LoginController@logout')->name('logout');
-
-// Registration Routes...
-Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-Route::post('register', 'Auth\RegisterController@register');
-
-// Password Reset Routes...
-Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+Route::resource('users', 'UsersController', ['only' => ['show', 'update', 'edit']]);
+//UsersController@show中的show方法传参时申明了类型User,show方法中对应的参数&user会匹配路由片段中的{user}，{user}对应请求路由中的用户ID
+//当请求 http://larabbs.test/users/1 并且满足以上两个条件时，Laravel 将会自动查找 ID 为 1 的用户并赋值到变量UsersController@show中的 $user 中
+Route::get('/users/{user}','UsersController@show')->name('users.show');
