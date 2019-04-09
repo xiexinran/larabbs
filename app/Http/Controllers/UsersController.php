@@ -8,6 +8,7 @@ use App\Models\User;
 //表单请求验证是laravel框架提供的用户表单数据验证方案，比手工调用validator来说能处理更为复杂的逻辑关系
 use App\Http\Requests\UserRequest;
 
+use App\Handlers\ImageUploadHandler;
 
 class UsersController extends Controller
 {
@@ -27,9 +28,22 @@ class UsersController extends Controller
      * @return array
      */
 
-    public function update(UserRequest $request, User $user)
+   
+     public function update(UserRequest $request, ImageUploadHandler $uploader, User $user)
     {
-        $user->update($request->all());
+        // 赋值 $data 变量，以便对更新数据的操作；
+        $data = $request->all();
+        //图片上传逻辑处理
+
+        if ($request->avatar) {
+            $result = $uploader->save($request->avatar, 'avatars', $user->id);
+            if ($result) {
+                $data['avatar'] = $result['path'];
+            }
+        }
+        //执行更新
+
+        $user->update($data);
         return redirect()->route('users.show', $user->id)->with('success', '个人资料更新成功！');
     }
 }
