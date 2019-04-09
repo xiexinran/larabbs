@@ -12,6 +12,14 @@ use App\Handlers\ImageUploadHandler;
 
 class UsersController extends Controller
 {
+    //利用laravel提供的auth中间件过滤，若为通过身份验证，将会被重定向到登录界面
+    //在构造函数中调用middleware方法，该方法接收两个参数，第一个为中间件的名称，第二个为过滤的动作，通过except来设定除了指定动作以外，所有其他动作必须登录用户才能访问
+
+     public function __construct()
+    {
+        $this->middleware('auth', ['except' => ['show']]);
+    }
+
      public function show(User $user)
     {
     	//将用户对象变量$user通过compact转换为一个关联数组，并作为第二个参数传递给view方法，将变量数据传递到视图中显示
@@ -20,6 +28,7 @@ class UsersController extends Controller
     }
 
     public function edit(User $user){
+         $this->authorize('update', $user);
     	return view('users.edit',compact('user'));
     }
      /**
@@ -31,6 +40,7 @@ class UsersController extends Controller
    
      public function update(UserRequest $request, ImageUploadHandler $uploader, User $user)
     {
+         $this->authorize('update', $user);
         // 赋值 $data 变量，以便对更新数据的操作；
         $data = $request->all();
         //图片上传逻辑处理
