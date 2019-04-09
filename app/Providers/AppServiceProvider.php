@@ -13,7 +13,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        //carbon是datetime操作扩展，laravel将其默认集成到了框架中，使用setlocale设置成中文提示
+        \Carbon\Carbon::setLocale('zh');
     }
 
     /**
