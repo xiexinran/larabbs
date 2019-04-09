@@ -1,11 +1,18 @@
 @extends('layouts.app')
 
-@section('title', '话题列表')
-
+<!-- 使当前页面的标题里有当前分类的，名称 -->
+@section('title', isset($category) ? $category->name : '话题列表')
 @section('content')
 
 <div class="row">
     <div class="col-lg-9 col-md-9 topic-list">
+
+        <!-- 用以标识当前所在分类 -->
+          @if (isset($category))
+            <div class="alert alert-info" role="alert">
+                {{ $category->name }} ：{{ $category->description }}
+            </div>
+        @endif
         <div class="panel panel-default">
 
             <div class="panel-heading">
